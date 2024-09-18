@@ -8,9 +8,10 @@ module.exports = {
     publicPath: '/'
   },
   devServer:    {
-    contentBase: path.join(__dirname, 'public'),
+    static: path.join(__dirname, 'public'),
     historyApiFallback: true,
-    port: 3000
+    port: 3000,
+    hot: true
   },
   module: {
     rules: [
@@ -32,6 +33,8 @@ module.exports = {
         }
       }
     ]
+  },
+  resolve: {
+    extensions: ['.js', '.jsx']
   }
 };
-
