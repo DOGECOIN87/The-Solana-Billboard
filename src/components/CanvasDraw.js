@@ -1,35 +1,58 @@
 import React, { useEffect, useRef } from 'react';
-import { Fabric } from 'fabric';
+import { fabric } from 'fabric';
+import styled from 'styled-components';
 
-function CanvasDraw({ updateTexture }) {
+const CanvasContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
+function CanvasDraw({ updateTexture, onClose }) {
   const canvasRef = useRef();
 
   useEffect(() => {
-    const canvas = new Fabric.Canvas('canvas', {
+    const canvas = new fabric.Canvas('canvas', {
       width: window.innerWidth,
       height: window.innerHeight
     });
 
-    // Add drawing tools, event listeners, etc.
+    canvas.isDrawingMode = true;
+    canvas.freeDrawingBrush.width = 5;
+    canvas.freeDrawingBrush.color = 'black';
 
     canvasRef.current = canvas;
 
+    const resizeCanvas = () => {
+      canvas.setWidth(window.innerWidth);
+      canvas.setHeight(window.innerHeight);
+      canvas.renderAll();
+    };
+
+    window.addEventListener('resize', resizeCanvas);
+
     return () => {
+      window.removeEventListener('resize', resizeCanvas);
       canvas.dispose();
     };
   }, []);
 
   const handleSave = () => {
-    updateTexture(canvasRef.current);
+    const dataURL = canvasRef.current.toDataURL({
+      format: 'png',
+      quality: 0.8
+    });
+    updateTexture(dataURL);
+    onClose();
   };
 
   return (
-    <div>
+    <CanvasContainer>
       <canvas id="canvas" />
-      <button onClick={handleSave}>Update Billboard</button>
-    </div>
+      <button onClick={handleSave}>Save</button>
+      <button onClick={onClose}>Cancel</button>
+    </CanvasContainer>
   );
 }
 
 export default CanvasDraw;
-
