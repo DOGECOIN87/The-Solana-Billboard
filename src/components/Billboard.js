@@ -1,31 +1,43 @@
 import React, { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { MeshBasicMaterial, TextureLoader } from 'three';
+import { useFrame, useThree } from '@react-three/fiber';
+import { TextureLoader } from 'three';
 import Menu from './Menu';
 import CanvasDraw from './CanvasDraw';
 import { gsap } from 'gsap';
 
 function Billboard() {
   const mesh = useRef();
+  const { camera } = useThree();
   const [isZoomed, setIsZoomed] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
   const [texture, setTexture] = useState(null);
 
   const handleBillboardClick = () => {
-    setIsZoomed(true);
-    setShowMenu(true);
-    gsap.to(mesh.current.position, {
-      z: 0,
-      duration: 1,
-      onComplete: () => {
-        // Overlay CanvasDraw and Menu
-      }
+    if (!isZoomed) {
+      setIsZoomed(true);
+      gsap.to(camera.position, {
+        x: mesh.current.position.x,
+        y: mesh.current.position.y,
+        z: mesh.current.position.z + 0.5,
+        duration: 1
+      });
+    }
+  };
+
+  const handleClose = () => {
+    setIsZoomed(false);
+    gsap.to(camera.position, {
+      x: 0,
+      y: 5,
+      z: 15,
+      duration: 1
     });
   };
 
-  const updateTexture = (canvas) => {
-    const newTexture = new TextureLoader().load(canvas.toDataURL());
-    setTexture(newTexture);
+  const updateTexture = (dataURL) => {
+    const loader = new TextureLoader();
+    loader.load(dataURL, (tex) => {
+      setTexture(tex);
+    });
   };
 
   useFrame(() => {
@@ -41,13 +53,14 @@ function Billboard() {
         ref={mesh}
         position={[0, 5, -10]}
         onClick={handleBillboardClick}
+        castShadow
       >
         <planeGeometry args={[10, 5]} />
         <meshBasicMaterial color="white" />
       </mesh>
       {isZoomed && (
         <>
-          <CanvasDraw updateTexture={updateTexture} />
+          <CanvasDraw updateTexture={updateTexture} onClose={handleClose} />
           <Menu />
         </>
       )}
@@ -56,4 +69,3 @@ function Billboard() {
 }
 
 export default Billboard;
-
