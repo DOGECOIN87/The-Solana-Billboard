@@ -1,16 +1,28 @@
 import { Connection, clusterApiUrl } from '@solana/web3.js';
-import { actions } from '@metaplex/js';
+import { Metaplex, walletAdapterIdentity, bundlrStorage } from '@metaplex-foundation/js';
 
-const { mintNFT } = actions;
+export const saveToBlockchain = async (wallet, file) => {
+  try {
+    const connection = new Connection(clusterApiUrl('devnet'));
+    const metaplex = Metaplex.make(connection)
+      .use(walletAdapterIdentity(wallet))
+      .use(bundlrStorage());
 
-export const saveToBlockchain = async (wallet, metadata) => {
-  const connection = new Connection(clusterApiUrl('devnet'));
-  const { nft } = await mintNFT({
-    connection,
-    wallet,
-    uri: metadata.uri,
-    maxSupply: 1
-  });
-  return nft;
+    const { uri } = await metaplex.nfts().uploadMetadata({
+      name: 'Billboard Design',
+      description: 'A user-created billboard design',
+      image: file
+    });
+
+    const { nft } = await metaplex.nfts().create({
+      uri,
+      name: 'Billboard Design NFT',
+      sellerFeeBasisPoints: 0
+    });
+
+    return nft;
+  } catch (error) {
+    console.error('Error saving to blockchain:', error);
+    throw error;
+  }
 };
-
