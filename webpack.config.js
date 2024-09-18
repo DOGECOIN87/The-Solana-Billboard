@@ -14,27 +14,18 @@ module.exports = {
     hot: true
   },
   module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use:    {
-          loader: 'babel-loader'
-        }
-      },
-      {
-        test: /\.css$/,
-        use:    ['style-loader', 'css-loader']
-      },
-      {
-        test: /\.(glb|gltf)$/,
-        use:    {
-          loader: 'file-loader'
-        }
+  rules: [
+    {
+      test: /\.(js|jsx)$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'babel-loader'
       }
-    ]
-  },
-  resolve: {
-    extensions: ['.js', '.jsx']
-  }
-};
+    },
+    // ... other rules
+  ]
+},
+resolve: {
+  extensions: ['.js', '.jsx']
+}
+
