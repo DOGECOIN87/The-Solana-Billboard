@@ -1,0 +1,36 @@
+{
+  "name": "the-solana-billboard",
+  "version": "1.0.0",
+  "description": "The Solana Billboard Interactive Experience",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve --mode development --open",
+    "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "three": "^0.142.0",
+    "@react-three/fiber": "^7.0.19",
+    "@solana/web3.js": "^1.31.0",
+    "@solana/wallet-adapter-react": "^0.15.4",
+    "@solana/wallet-adapter-react-ui": "^0.15.4",
+    "@solana/wallet-adapter-wallets": "^0.15.4",
+    "fabric": "^4.6.0",
+    "gsap": "^3.9.1",
+    "ipfs-http-client": "^54.0.2",
+    "styled-components": "^5.3.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "@babel/preset-react": "^7.14.5",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^6.4.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.64.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.3.1"
+  }
+}
+
